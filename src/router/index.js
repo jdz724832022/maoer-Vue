@@ -1,27 +1,65 @@
-import Vue from 'vue'
+// 配置路由
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue'
 
+// 1.通过vue.use使用插件
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
+// 2.创建vue.router对象
 const router = new VueRouter({
-  routes
+  // 配置映射关系
+  routes: [
+    {
+      path: '/',
+      redirect: '/recommend'
+    },
+    {
+      path: '/albums',
+      component: () => import('../views/albums.vue')
+    },
+    {
+      path: '/catalogs',
+      component: () => import('../views/catalogs.vue')
+    },
+    {
+      path: '/recommend',
+      component: () => import('../views/recommend.vue')
+    },
+    {
+      path: '/detail/:albumid',
+      name: 'detail',
+      component: () => import('../views/detail/detail.vue')
+    },
+    {
+      path: '/catalogs/:cataId',
+      name: 'catalog',
+      component: () => import('../components/catalogs/cataItem.vue')
+    },
+    {
+      path: '/sound',
+      component: () => import('../views/sound.vue'),
+      children: [
+        {
+          path: '/',
+          redirect: '/soundIndru/:id'
+        },
+        {
+          path: '/soundIndru/:id',
+          component: () => import('../components/sound/soundIndru.vue')
+        },
+        {
+          path: '/soundTalk/:id',
+          component: () => import('../components/sound/soundTalk.vue')
+        },
+        {
+          path: '/soundPic/:id',
+          component: () => import('../components/sound/soundPic.vue')
+        }
+      ]
+    }
+  ],
+  linkActiveClass: 'active'
 })
 
+// 3.将router对象传入到Vue实例
 export default router
